@@ -132,8 +132,33 @@ function run_all_installable_dependencies() {
   echo "-----------------------------------------------------------"
   installable_dependency_libpq
   echo "-----------------------------------------------------------"
-
   installable_dependency_kubectl
+  echo "-----------------------------------------------------------"
+  installable_dependency_docker_desktop
+  echo "-----------------------------------------------------------"
+  installable_dependency_watchman
+  echo "-----------------------------------------------------------"
+  installable_dependency_gh
+  echo "-----------------------------------------------------------"
+  installable_dependency_overmind
+  echo "-----------------------------------------------------------"
+  installable_dependency_libmagic
+  echo "-----------------------------------------------------------"
+  installable_dependency_cmake
+  echo "-----------------------------------------------------------"
+  installable_dependency_pkg_config
+  echo "-----------------------------------------------------------"
+  installable_dependency_cairo
+  echo "-----------------------------------------------------------"
+  installable_dependency_pango
+  echo "-----------------------------------------------------------"
+  installable_dependency_libpng
+  echo "-----------------------------------------------------------"
+  installable_dependency_jpeg
+  echo "-----------------------------------------------------------"
+  installable_dependency_giflib
+  echo "-----------------------------------------------------------"
+  installable_dependency_librsvg
   echo "==========================================================="
 }
 
@@ -281,10 +306,299 @@ function installable_dependency_kubectl() {
     printf "$message_installing"
 
     local command=$(cat <<'EOF'
-gcloud components install kubectl
+brew install kubectl
 EOF
 )
 
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_docker_desktop() {
+  command -v docker &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'docker'\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - Docker Desktop\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install --cask docker-desktop
+EOF
+)
+
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_watchman() {
+  command -v watchman &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'watchman'\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'watchman'\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install watchman
+EOF
+)
+
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_gh() {
+  command -v gh &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'gh'\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'gh'\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install gh
+git config --global credential.https://github.com.helper '!/opt/homebrew/bin/gh auth git-credential'
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_overmind() {
+  command -v overmind &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'overmind'\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'overmind'\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install overmind
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_libmagic() {
+  brew list libmagic &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'libmagic' (needed for 'ruby-filemagic' gem)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'libmagic' (needed for 'ruby-filemagic' gem)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install libmagic
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_cmake() {
+  brew list cmake &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'cmake' (needed for 'rugged' gem)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'cmake' (needed for 'rugged' gem)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install cmake
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_pkg_config() {
+  brew list pkg-config &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'pkg-config' (needed for 'rugged' gem)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'pkg-config' (needed for 'rugged' gem)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install pkg-config
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_cairo() {
+  brew list cairo &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'cairo' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'cairo' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install cairo
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_pango() {
+  brew list pango &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'pango' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'pango' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install pango
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_libpng() {
+  brew list libpng &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'libpng' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'libpng' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install libpng
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_jpeg() {
+  brew list jpeg &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'jpeg' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'jpeg' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install jpeg
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_giflib() {
+  brew list giflib &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'giflib' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'giflib' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install giflib
+EOF
+)
+    if $dry_run; then
+      printf "$message_dry_run"
+      printf "$command\n"
+    else
+      eval "$command"
+    fi
+  fi
+}
+
+function installable_dependency_librsvg() {
+  brew list librsvg &>/dev/null
+  if [ $? -eq 0 ]; then
+    printf "✅ - 'librsvg' (needed for 'canvas' node module)\n"
+  else
+    all_dependencies_met=false
+    printf "🚫 - 'librsvg' (needed for 'canvas' node module)\n"
+    printf "$message_installing"
+
+    local command=$(cat <<'EOF'
+brew install librsvg
+EOF
+)
     if $dry_run; then
       printf "$message_dry_run"
       printf "$command\n"
