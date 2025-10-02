@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# -e tells bash to exit immediately on error, instead of its default of continuing
-# -x prints out each command being run for easier debugging
-# set -e
-
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # THIS IS A PUBLIC SCRIPT VIEWABLE BY ANYONE ON THE INTERNET!
 # DO NOT PUT ANYTHING SENSITIVE IN HERE!
@@ -66,14 +62,14 @@ function post_dependencies_met() {
   if [ $? -eq 0 ]; then
     if [ -d "$HOME/family" ]; then
       printf "🚨 ${Red}Looks like you already have a directory at '$HOME/family'${Color_Off}\n"
-      printf "Probably best to go there, pull 'main', and run one of:\n"
+      printf "Probably best to get a new shell, go there, pull 'main', and run one of:\n"
       printf "${Indent}'${Yellow}./scripts/b/lib/setup_vm_laptop${Color_Off}' (if you want to use a development VM)\n"
-      printf "${Indent}'${Yellow}./scripts/b/lib/setup_dev_laptop${Color_Off}' (if you want to develop directly on this machine)\n"
+      printf "${Indent}'${Yellow}./scripts/b/lib/setup_mac_for_local_development.sh${Color_Off}' (if you want to develop directly on this machine)\n"
     else
       clone_family
     fi
   else
-    printf ""
+    printf "${Yellow}You need to authenticate with 'gh'. About to run 'gh auth login --web'...${Color_Off}\n"
     gh auth login --web
     clone_family
   fi
@@ -83,6 +79,9 @@ function clone_family() {
   printf "${Green}Looks like you are authenticated with 'gh'. Cloning 'family' repo to '$HOME/family'${Color_Off}\n"
   cd $HOME
   gh repo clone binti-family/family
+  printf "${BGreen}Repo cloned! Next, get a new shell, 'cd $HOME/family', and run one of:\n"
+  printf "${Indent}'${Yellow}./scripts/b/lib/setup_vm_laptop${Color_Off}' (if you want to use a development VM)\n"
+  printf "${Indent}'${Yellow}./scripts/b/lib/setup_mac_for_local_development.sh${Color_Off}' (if you want to develop directly on this machine)\n"
 }
 
 # ============================
