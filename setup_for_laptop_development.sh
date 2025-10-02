@@ -4,22 +4,69 @@
 # -x prints out each command being run for easier debugging
 # set -e
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# THIS IS A PUBLIC SCRIPT VIEWABLE BY ANYONE ON THE INTERNET!
+# DO NOT PUT ANYTHING SENSITIVE IN HERE!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 # =======================================
 # GETS CALLED AT THE BOTTOM OF THIS FILE.
 # =======================================
 function run() {
   printf "\n\n💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙\n"
-  printf "💙 BINTI LAPTOP DEVELOPMENT INSTALLER 💙\n"
+  printf "💙 ${BBlue}BINTI LAPTOP DEVELOPMENT INSTALLER${Color_Off} 💙\n"
   printf "💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙💙\n\n\n"
 
-  if $dry_run; then
-    printf "🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵\n"
-    printf "🌵 This script defaults to being a dry run! Add '${Yellow}--wet-run${Color_Off}' when you're ready to execute it for reals! 🌵\n"
-    printf "🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵🌵\n\n"
+  printf "✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋\n"
+  printf "This is ${BRed}${URed}EXPERIMENTAL!${Color_Off} Meaning if you're not comfortable\n"
+  printf "digging yourself out of a weird command-line-based hole\n"
+  printf "this probably is not for you and you should stick to\n"
+  printf "VM development!\n"
+  printf "✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋\n\n"
+
+  printf "${BBlue}Would you like to continue?${Color_Off} [${Green}y${BRed}N${Color_Off}]${Color_Off}"
+  read -p " " -n 1 -r
+  echo    # (optional) move to a new line
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    printf ''
+  else
+    echo "See ya later!"
+    exit
   fi
 
-  run_all_non_installable_dependencies
-  run_all_installable_dependencies
+  printf "\n\nFirst we're going to check:\n"
+  printf "${Indent}- Which dependencies you have: ✅\n"
+  printf "${Indent}- Which are missing: 🚫\n"
+  printf "${Indent}- Show you the commands we'd run to install anything needed\n\n"
+  printf "${BBlue}Would you like to continue?${Color_Off} [${Green}y${BRed}N${Color_Off}]${Color_Off}"
+  read -p " " -n 1 -r
+  echo    # (optional) move to a new line
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    run_all_non_installable_dependencies
+    run_all_installable_dependencies
+
+    if $all_dependencies_met; then
+      printf "\n\n${BGreen}FANTASTIC! ${Green}You're all set to go!${Color_Off}\n"
+    else
+      printf "\n\n${Yellow}Looks like you have some unmet dependencies!${Color_Off}\n"
+      printf "Take a look above at the commands that we're planning on running to meet dependency needs.\n"
+      printf "If you're comfortable with that, continue. Otherwise feel free to meet those dependencies however you'd like.\n\n"
+      printf "${BBlue}Would you like to continue?${Color_Off} [${Green}y${BRed}N${Color_Off}]${Color_Off}"
+      read -p " " -n 1 -r
+      echo    # (optional) move to a new line
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        dry_run=false
+        run_all_non_installable_dependencies
+        run_all_installable_dependencies
+      else
+        echo "See ya later!"
+        exit
+      fi
+    fi
+  else
+    echo "See ya later!"
+    exit
+  fi
 }
 
 # ============================
@@ -94,6 +141,7 @@ function installable_dependency_xcode_cli() {
   if xcode-select -p &>/dev/null; then
     printf "✅ - 'xcode' CLI\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'xcode' CLI\n"
     printf "$message_installing"
 
@@ -129,6 +177,7 @@ function installable_dependency_brew() {
   if command -v brew &>/dev/null; then
     printf "✅ - 'brew'\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'brew'\n"
     printf "$message_installing"
 
@@ -154,6 +203,7 @@ function installable_dependency_gcloud() {
   if command -v gcloud &>/dev/null; then
     printf "✅ - 'gcloud'\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'gcloud'\n"
     printf "$message_installing"
 
@@ -175,6 +225,7 @@ function installable_dependecy_asdf() {
   if command -v asdf &>/dev/null; then
     printf "✅ - 'asdf'\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'asdf'\n"
     printf "$message_installing"
 
@@ -202,6 +253,7 @@ function installable_dependency_libpq() {
   if [ $? -eq 0 ]; then
     printf "✅ - 'libpq' (needed for 'pg' gem)\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'libpq' (needed for 'pg' gem)\n"
     printf "$message_installing"
 
@@ -224,6 +276,7 @@ function installable_dependency_kubectl() {
   if command -v kubectl &>/dev/null; then
     printf "✅ - 'kubectl'\n"
   else
+    all_dependencies_met=false
     printf "🚫 - 'kubectl'\n"
     printf "$message_installing"
 
@@ -245,11 +298,7 @@ EOF
 # START OF ARGUMENT PARSING. FOR SOME REASON PUTTING THIS INTO FUNCTIONS BREAKS
 # =============================================================================
 dry_run=true
-for var in "$@"; do
-  if [ $var = "--wet-run" ]; then
-    dry_run=false
-  fi
-done
+all_dependencies_met=true
 
 shell_is_zsh=false
 # Gnarly bash to: split $SHELL on `/` and get the last element of array
@@ -304,17 +353,4 @@ message_installing="${Indent}Installing...\n"
 # KICKS EVERYTHING OFF. THIS WAY WE CAN USE FUNCTIONS AND BE CLEANER
 # THIS HAS TO BE LAST FOR VARIABLES TO BE IN SCOPE
 # ==================================================================
-printf "✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋\n"
-printf "This is ${BRed}${URed}EXPERIMENTAL!${Color_Off} Meaning if you're not comfortable\n"
-printf "digging yourself out of a weird command-line-based\n"
-printf "hole this probably is not for you and you should\n"
-printf "stick to VM development!\n"
-printf "✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋✋\n\n"
-
-read -p "Would you like to continue? [yN] " -n 1 -r
-echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  run
-else
-  echo "See ya later!"
-fi
+run
