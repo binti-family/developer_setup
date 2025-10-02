@@ -80,8 +80,8 @@ function clone_family() {
   cd $HOME
   gh repo clone binti-family/family
   printf "${BGreen}Repo cloned! Next, get a new shell, 'cd $HOME/family', and run one of:\n"
-  printf "${Indent}'${Yellow}./scripts/b/lib/setup_vm_laptop${Color_Off}' (if you want to use a development VM)\n"
-  printf "${Indent}'${Yellow}./scripts/b/lib/setup_mac_for_local_development.sh${Color_Off}' (if you want to develop directly on this machine)\n"
+  printf "${Indent}'${Yellow}./scripts/b/lib/setup_mac_for_vm_development.sh${Color_Off}' (RECOMMENDED: if you want to use a development VM)\n"
+  printf "${Indent}'${Yellow}./scripts/b/lib/setup_mac_for_local_development.sh${Color_Off}' (EXPERIMENTAL: if you want to develop directly on this machine)\n"
 }
 
 # ============================
